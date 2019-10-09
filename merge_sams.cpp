@@ -11,6 +11,8 @@ void die(const char* s) {
  * looks by AS:i field first
  * then by mapq score
  * if mapqs AND alignment scores are equal, return 1
+ *
+ * usage: ./merge_sams sam1.[bs]am sam2.[bsam]
  */
 bool compare_bam1_t(bam1_t* l, bam1_t* r) {
     // l->core.flag & 4 -> 0
@@ -27,6 +29,14 @@ bool compare_bam1_t(bam1_t* l, bam1_t* r) {
     }
 }
 
+/* merges two SAM/BAM files. If two records for the same reads exist, then report
+ * the "better".
+ * here, we define "better" as the alignment that has:
+ * 1) is aligned
+ * 2) OR has the better alignment score
+ * 3) OR has the better MAPQ score
+ * in the future, we will add options for customizing how to define "better"
+ * */
 int main(int argc, char** argv) {
     if (argc < 3) {
         fprintf(stderr, "please specify truth sam file AND test sam file\n");

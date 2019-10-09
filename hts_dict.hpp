@@ -17,6 +17,8 @@ namespace hts_util {
     template <typename T>
     using Str2T = ska::flat_hash_map< std::string, T >;
 
+    using StrSet = ska::flat_hash_set< std::string >;
+
     /* T must have constructor that takes bam1_t* as sole argument */
     template<typename T>
     Str2T<T> bam_to_dict(samFile* fp, bam_hdr_t* hdr) {

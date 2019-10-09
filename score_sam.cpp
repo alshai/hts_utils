@@ -10,6 +10,14 @@ struct Aln {
     int32_t p;
 };
 
+/* given a set of "true" alignments and a set of test alignments,
+ * for each record in the test alignments, output:
+ * READ_NAME TRUE_REF TRUE_POS TEST_REF TEST_POS CORRECT
+ * where "CORRECT" is 0 if incorrect, 1 if correct
+ * By correct, we mean that TEST_REF==TRUE_REF and TEST_POS==TRUE_POS
+ *
+ * usage: ./score_sam truth.[bs]am test.[bs]am
+ */
 int main(int argc, char** argv) {
     if (argc < 3) {
         fprintf(stderr, "please specify truth sam file AND test sam file\n");
