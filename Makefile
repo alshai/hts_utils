@@ -1,8 +1,8 @@
 CXX=g++
 CXX_FLAGS=-std=c++11
 
-all: score_sams
+all: score_sam
 
-score_sams: score_sam.cpp hts_dict.hpp bam_util.hpp
+score_sam: score_sam.cpp hts_dict.hpp bam_util.hpp
 	$(CXX) -o $@ $< -lhts
 
