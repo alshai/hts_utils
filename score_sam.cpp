@@ -31,11 +31,15 @@ int main(int argc, char** argv) {
     }
     auto truth_set = hts_util::bam_to_dict<Aln>(fps[0], hdrs[0]);
     bam1_t* rec = bam_init1();
+    // fprintf(stderr, "read truth\n");
+    int i = 0;
     const char* fmt_str = "%s\t%s\t%d\t%s\t%d\t%d\n";
     while (sam_read1(fps[1], hdrs[1], rec) >= 0) {
         const char* qname(bam_get_qname(rec));
-        const char* rname = hdrs[1]->target_name[rec->core.tid];
-        int32_t pos = rec->core.pos;
+        // fprintf(stderr, "%s starting\n", qname);
+        bool aligned = !(rec->core.flag & 4);
+        const char* rname = aligned ? hdrs[1]->target_name[rec->core.tid] : "NA";
+        int32_t pos = aligned ? rec->core.pos : -1;
         auto pair = truth_set.find(std::string(qname));
         if (pair != truth_set.end()) {
             auto a = pair->second;
@@ -43,5 +47,7 @@ int main(int argc, char** argv) {
         } else {
             fprintf(stdout,fmt_str,qname,"*",0,rname,pos,0);
         }
+        // fprintf(stderr, "%s done\n", qname);
+        ++i;
     }
 }
