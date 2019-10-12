@@ -5,7 +5,7 @@
 #include "bam_util.hpp"
 
 struct Args {
-    int buffer = 0;
+    int32_t buffer = 0;
 };
 
 struct Aln {
@@ -56,7 +56,8 @@ int main(int argc, char** argv) {
         print_help();
     }
     for (int i = 0; i < 2; ++i) {
-        fps[i] = sam_open(argv[optind++], "r");
+        const char* fname = argv[optind++];
+        fps[i] = sam_open(fname, "r");
         hdrs[i] = sam_hdr_read(fps[i]);
     }
     auto truth_set = hts_util::bam_to_dict<Aln>(fps[0], hdrs[0]);
@@ -64,12 +65,19 @@ int main(int argc, char** argv) {
     const char* fmt_str = "%s\t%s\t%d\t%s\t%d\t%d\n";
     while (sam_read1(fps[1], hdrs[1], rec) >= 0) {
         const char* qname(bam_get_qname(rec));
-        const char* rname = hdrs[1]->target_name[rec->core.tid];
-        int32_t pos = rec->core.pos;
+        const char* rname;
+        int32_t pos;
+        if (rec->core.flag & 4) {
+            rname = "*";
+            pos = -1;
+        } else {
+            rname = hdrs[1]->target_name[rec->core.tid];
+            pos = rec->core.pos;
+        }
         auto pair = truth_set.find(std::string(qname));
         if (pair != truth_set.end()) {
             auto a = pair->second;
-            fprintf(stdout,fmt_str,qname,a.r.data(),a.p,rname,pos,std::abs(a.p-pos) <= args.buffer);
+            fprintf(stdout,fmt_str,qname,a.r.data(),a.p,rname,pos, std::abs(a.p-pos) <= args.buffer);
         } else {
             fprintf(stdout,fmt_str,qname,"*",0,rname,pos,0);
         }
