@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cmath>
 #include <getopt.h>
 #include "hts_dict.hpp"
 #include "bam_util.hpp"
@@ -68,7 +69,7 @@ int main(int argc, char** argv) {
         auto pair = truth_set.find(std::string(qname));
         if (pair != truth_set.end()) {
             auto a = pair->second;
-            fprintf(stdout,fmt_str,qname,a.r.data(),a.p,rname,pos,a.p==pos);
+            fprintf(stdout,fmt_str,qname,a.r.data(),a.p,rname,pos,std::abs(a.p-pos) <= args.buffer);
         } else {
             fprintf(stdout,fmt_str,qname,"*",0,rname,pos,0);
         }
