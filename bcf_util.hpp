@@ -18,7 +18,7 @@ namespace hts_util {
         }
         bcf_hdr_t* hdr;
         bcf1_t* rec;
-    }
+    };
 
     /*** GENOTYPING FUNCTIONS ***/
     int32_t* get_genotype(bcf_hdr_t* hdr, bcf1_t* rec, int* ngt) {

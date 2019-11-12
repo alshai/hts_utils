@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstdlib>
 #include "hts_dict.hpp"
 #include "bam_util.hpp"
 
@@ -25,7 +26,14 @@ bool compare_bam1_t(bam1_t* l, bam1_t* r) {
         uint8_t* raux = bam_aux_get(r, "AS");
         int las = laux ? bam_aux2i(laux) : -1;
         int ras = raux ? bam_aux2i(raux) : -1;
-        return las == ras ? l->core.qual >= r->core.qual : las > ras;
+        if (las == ras) {
+            if (l->core.qual == r->core.qual) {
+                float r = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX);
+                return r < 0.5;
+            } else { 
+                return l->core.qual > r->core.qual;
+            }
+        } else return las > ras;
     }
 }
 

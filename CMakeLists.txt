@@ -16,7 +16,7 @@ target_link_libraries(score_sam ${PKG_HTSLIB_LDFLAGS})
 add_executable(merge_sams merge_sams.cpp hts_dict.hpp bam_util.hpp)
 target_link_libraries(merge_sams ${PKG_HTSLIB_LDFLAGS})
 
-# add_executable(gt_dist gt_dist.cpp hts_dict.hpp vcf_util.hpp)
-# target_link_libraries(gt_dist ${PKG_HTSLIB_LDFLAGS})
+add_executable(gt_dist gt_dist.cpp hts_dict.hpp bcf_util.hpp)
+target_link_libraries(gt_dist ${PKG_HTSLIB_LDFLAGS})
 
 # INSTALL(TARGETS score_sam merge_sams gt_dist DESTINATION bin)
